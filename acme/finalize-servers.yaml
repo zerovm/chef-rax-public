@@ -1,0 +1,33 @@
+---
+- hosts: zwift.storage
+  user: root
+  gather_facts: True
+  serial: 1
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-rings.yaml
+
+- hosts: local
+  gather_facts: False
+  user: root
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-local.yaml
+
+- hosts: zwift.storage:zwift.proxy
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-storage-rings.yaml
+    - include: ../tasks/chef-finalize.yaml
+
+  handlers:
+    - include: ../handlers/swift-global.yaml
+

@@ -1,0 +1,40 @@
+---
+- name: Create partitions
+  parted: minsize={{ min_storage_partition }} repeated=yes filesystem=xfs
+  when: disk_strategy == 'rackspace'
+  tags:
+    - storage
+
+- name: Create filesystems
+  filesystem: dev={{ item.path }} fstype=xfs
+  when: disk_strategy == 'rackspace'
+  with_items: parted_created
+  tags:
+    - storage
+
+- name: Test existing filesystems
+  filesystem: dev={{ item.path }} fstype=xfs
+  when: disk_strategy == 'rackspace'
+  with_items: parted_existing
+  tags:
+    - storage
+
+- name: Recheck partitions
+  parted: minsize={{ min_storage_partition }} repeated=yes filesystem=xfs
+  when: disk_strategy == 'rackspace'
+  tags:
+    - storage
+
+- name: Remount all
+  mount: src={{ item.path }} state=mounted name=/srv/node/{{ item.name }} fstype=xfs opts='noatime,nodiratime,nobarrier,logbufs=8'
+  when: disk_strategy == 'rackspace'
+  with_items: parted_existing
+  tags:
+    - storage
+
+#- name: Set permissions for storage devices
+#  file: path=/srv/node/{{ item.name }} owner=swift group=swift state=directory
+#  when: disk_strategy == 'rackspace'
+#  with_items: parted_existing
+#  tags:
+#    - storage

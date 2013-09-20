@@ -1,0 +1,16 @@
+---
+- name: download rings
+  fetch: src=/etc/swift/{{ item }}.ring.gz dest=/tmp/ flat=yes
+  when: "inventory_hostname == groups['zwift.proxy'][0]"
+  with_items:
+    - object
+    - container
+    - account
+
+- name: upload rings
+  copy: src=/tmp/{{ item }}.ring.gz dest=/etc/swift/{{ item }}.ring.gz owner=swift group=swift backup=yes
+  with_items:
+    - object
+    - container
+    - account
+ 

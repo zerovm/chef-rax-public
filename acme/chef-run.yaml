@@ -1,0 +1,10 @@
+---
+- hosts: zwift.chef-server:zwift.storage:zwift.proxy
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/chef-run.yaml
+

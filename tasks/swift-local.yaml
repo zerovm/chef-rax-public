@@ -1,0 +1,46 @@
+---
+- name: rebalance object ring
+  action: command swift-ring-builder /etc/swift/object.builder rebalance
+  register: rebalance_object
+  ignore_errors: True
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+    
+- name: check for object rebalance errors
+  action: command /bin/false
+  when: rebalance_object.rc != 0 and rebalance_object.stdout.find('No partitions could be reassigned') == -1 
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+
+- name: rebalance container ring
+  action: command swift-ring-builder /etc/swift/container.builder rebalance
+  ignore_errors: True
+  register: rebalance_container
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+
+- name: check for container rebalance errors
+  action: command /bin/false
+  when: rebalance_container.rc != 0 and rebalance_container.stdout.find('No partitions could be reassigned') == -1 
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+
+- name: rebalance account ring
+  action: command swift-ring-builder /etc/swift/account.builder rebalance
+  ignore_errors: True
+  register: rebalance_account
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+
+- name: check for account rebalance errors
+  action: command /bin/false
+  when: rebalance_account.rc != 0 and rebalance_account.stdout.find('No partitions could be reassigned') == -1 
+  delegate_to: "{{ groups['zwift.proxy'][0] }}"
+  tags:
+    - rebalance
+

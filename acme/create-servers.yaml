@@ -1,0 +1,80 @@
+---
+
+- hosts: local
+  connection: local
+  vars_files:
+    - "../rackspace-server-list.yaml"
+    - "../rackspace_vars.yaml"
+
+  tasks:
+
+  - name: Create storage servers
+    local_action :
+      module: rax
+      meta: {'group': '{{ item.role}}', 'zone': '{{ item.zone }}', 'region': '{{ item.region }}'}
+      creds_file: '{{ credentials }}'
+      service: cloudservers
+      region: '{{ region }}'
+      name: '{{ item.host }}'
+      flavor: '{{ item.flavor }}'
+      image: '{{ image }}'
+      key_name: '{{ key_name }}'
+      disk_config: 'manual'
+      wait: no
+      state: present
+    register: create_storage
+    with_items: swift_servers
+    when: item.role == 'zwift.storage'
+
+  - name: Create proxy servers
+    local_action :
+      module: rax
+      meta: {'group': '{{ item.role }}'}
+      creds_file: '{{ credentials }}'
+      service: cloudservers
+      region: '{{ region }}'
+      name: '{{ item.host }}'
+      flavor: '{{ item.flavor }}'
+      image: '{{ image }}'
+      key_name: '{{ key_name }}'
+      disk_config: 'manual'
+      wait: no
+      state: present
+    register: create_proxy
+    with_items: swift_servers
+    when: item.role == 'zwift.proxy'
+
+  - name: Wait for storage servers
+    local_action :
+      module: rax
+      meta: {'group': '{{ item.role}}', 'zone': '{{ item.zone }}', 'region': '{{ item.region }}'}
+      creds_file: '{{ credentials }}'
+      service: cloudservers
+      region: '{{ region }}'
+      name: '{{ item.host }}'
+      flavor: '{{ item.flavor }}'
+      image: '{{ image }}'
+      key_name: '{{ key_name }}'
+      disk_config: 'manual'
+      wait: yes
+      state: present
+    with_items: swift_servers
+    when: item.role == 'zwift.storage' and create_storage.changed
+
+  - name: Wait for proxy servers
+    local_action :
+      module: rax
+      meta: {'group': '{{ item.role }}'}
+      creds_file: '{{ credentials }}'
+      service: cloudservers
+      region: '{{ region }}'
+      name: '{{ item.host }}'
+      flavor: '{{ item.flavor }}'
+      image: '{{ image }}'
+      key_name: '{{ key_name }}'
+      disk_config: 'manual'
+      wait: yes
+      state: present
+    with_items: swift_servers
+    when: item.role == 'zwift.proxy' and create_proxy.changed
+

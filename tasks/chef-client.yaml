@@ -1,0 +1,48 @@
+---
+- name: chef client prereq
+  apt: pkg=curl
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+
+- name: download pem file
+  fetch: src=/etc/chef-server/chef-validator.pem dest=/tmp/ flat=yes fail_on_missing=yes
+  when: "'zwift.chef-server' in group_names"
+  tags:
+    - chef_client
+  
+- name: run chef client installer
+  shell: curl -skS -L http://www.opscode.com/chef/install.sh | bash -s - -v {{ chef_client.version }}
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+
+- name: create chef config directory
+  file: path=/etc/chef state=directory
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+
+- name: create client.rb
+  template: src=../templates/client.rb dest=/etc/chef/client.rb
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+  
+- name: create knife.rb
+  template: src=../templates/knife.rb dest=/etc/chef/knife.rb
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+
+- name: create validation.pem
+  copy: src=/tmp/chef-validator.pem dest=/etc/chef/validation.pem
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  
+
+- name: run chef client
+  command: chef-client
+  when: "not 'zwift.chef-server' in group_names"
+  tags:
+    - chef_client  

@@ -1,0 +1,44 @@
+---
+credentials: /home/zvm/.rax-corp
+region: IAD
+proxy_role: zwift.proxy
+storage_role: zwift.storage
+chef_role: zwift.chef-server
+key_name: zvm
+image: 23b564c9-c3e6-49f9-bc68-86c7a9ab5018 # Ubuntu 12.04 LTS
+cookbook:
+  repo: https://github.com/rcbops/chef-cookbooks
+  version: master
+  dir: /root/chef-cookbooks
+swift_lite:
+  repo: https://github.com/rcbops-cookbooks/swift-lite
+  version: master
+swift_private_cloud:
+  repo: https://github.com/rcbops-cookbooks/swift-private-cloud
+  version: master
+opscode: https://github.com/opscode-cookbooks
+proxy_internal_interface: eth1
+proxy_external_interface: eth0
+storage_internal_interface: eth1
+storage_external_interface: eth0
+disk_strategy: rackspace
+min_storage_partition: 20000 # in MB
+device_weight: 1
+install_chef_client_url: https://raw.github.com/rcbops/support-tools/master/chef-install/install-chef-client.sh
+chef_server_interface: eth1
+chef_client_interface: eth1
+chef_client:
+  version: "11.2.0-1"
+  env: "_default"
+chef_roles:
+  storage:
+    - '"role[zwift-storage-server]"'
+#    - '"role[swift-lite-object]"'
+#    - '"role[swift-lite-account]"'
+#    - '"role[swift-lite-container]"'
+  keystone:
+    - '"role[mysql-master]"'
+    - '"role[keystone]"'
+  proxy:
+#    - '"role[swift-lite-proxy]"'
+    - '"role[zwift-proxy-server]"'

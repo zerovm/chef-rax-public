@@ -1,0 +1,15 @@
+---
+chef_servers:
+  - { 'host': 'chef-server', 'role': 'zwift.chef-server', 'flavor': 6 }
+
+swift_servers:
+  - { 'host': 'node01', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '1' }
+  - { 'host': 'node02', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '2' }
+  - { 'host': 'node03', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '3' }
+  - { 'host': 'node04', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '4' }
+  - { 'host': 'node05', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '1' }
+  - { 'host': 'node06', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '2' }
+  - { 'host': 'node07', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '3' }
+  - { 'host': 'node08', 'role': 'zwift.storage', 'flavor': 8, 'region': '1', 'zone': '4' }
+  - { 'host': 'node09', 'role': 'zwift.proxy', 'flavor': 7 }
+  - { 'host': 'node10', 'role': 'zwift.proxy', 'flavor': 7 }

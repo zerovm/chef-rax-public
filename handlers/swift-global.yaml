@@ -1,0 +1,6 @@
+---
+- name: restore iptables
+  action: shell iptables-restore < /etc/iptables/rules.v4.init
+
+- name: save iptables
+  action: shell iptables-save > /etc/iptables/rules.v4

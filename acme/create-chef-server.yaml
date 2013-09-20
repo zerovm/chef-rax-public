@@ -1,0 +1,25 @@
+---
+- hosts: local
+  connection: local
+  vars_files:
+    - "../rackspace_vars.yaml"
+    - "../rackspace-server-list.yaml"
+
+  tasks:
+
+  - name: Create chef server
+    local_action :
+      module: rax
+      meta: {'group': '{{ item.role}}'}
+      creds_file: '{{ credentials }}'
+      service: cloudservers
+      region: '{{ region }}'
+      name: '{{ item.host }}'
+      flavor: '{{ item.flavor }}'
+      image: '{{ image }}'
+      key_name: '{{ key_name }}'
+      disk_config: 'auto'
+      wait: yes
+      state: present
+    with_items: chef_servers
+

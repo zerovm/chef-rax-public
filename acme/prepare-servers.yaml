@@ -1,0 +1,77 @@
+---
+- hosts: zwift.proxy
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-proxy-prereq.yaml
+
+  handlers:
+    - include: ../handlers/swift-global.yaml
+
+- hosts: zwift.storage
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-storage-prereq.yaml
+    - include: ../tasks/swift-storage-disks.yaml
+ 
+  handlers:
+    - include: ../handlers/swift-global.yaml
+
+#- hosts: zwift.storage
+#  user: root
+#  gather_facts: True
+#  serial: 1
+#  vars_files:
+#    - ../rackspace_vars.yaml
+
+#  tasks:
+#    - include: ../tasks/swift-rings.yaml
+
+#- hosts: local
+#  gather_facts: False
+#  vars_files:
+#    - ../rackspace_vars.yaml
+
+#  tasks:
+#    - include: ../tasks/swift-local.yaml
+
+#- hosts: zwift.storage
+#  user: root
+#  gather_facts: True
+#  vars_files:
+#    - ../rackspace_vars.yaml
+#
+#  tasks:
+#    - include: ../tasks/swift-storage-rings.yaml
+#
+#  handlers:
+#    - include: ../handlers/swift-global.yaml
+
+#- hosts: zwift.proxy
+#  user: root
+#  gather_facts: True
+#  vars_files:
+#    - ../rackspace_vars.yaml
+#
+#  tasks:
+#    - include: ../tasks/swift-storage-rings.yaml
+#
+#  handlers:
+#    - include: ../handlers/swift-global.yaml
+
+- hosts: zwift.storage:zwift.proxy:zwift.chef-server
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/chef-client.yaml
+

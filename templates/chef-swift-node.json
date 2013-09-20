@@ -1,0 +1,22 @@
+{% set roles = [ '"recipe[osops-utils::packages]"' ] %}
+{% for name in group_names %}
+  {% if name == 'zwift.storage' %}
+    {% if roles.extend(chef_roles.storage) %}{% endif %}
+  {% elif name == 'zwift.proxy' %}
+    {% if roles.extend(chef_roles.proxy) %}{% endif %}
+  {% elif name == 'zwift.keystone' %}
+    {% if roles.extend(chef_roles.keystone) %}{% endif %}
+  {% endif %}
+{% endfor %}
+{
+  "name": "{{ hostvars[inventory_hostname]['rax_name'] }}",
+  "chef_environment": "swift-lite",
+  "run_list": [
+    {{ roles|join(', ') }}
+  ],
+  "normal": {
+    "tags": [
+
+    ]
+  }
+}
