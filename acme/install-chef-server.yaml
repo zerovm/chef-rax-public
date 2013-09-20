@@ -9,6 +9,8 @@
 
   - name: install chef server
     shell: creates=/etc/chef-server/chef-server.rb executable=/bin/bash curl -s -L https://raw.github.com/rcbops/support-tools/master/chef-install/install-chef-server.sh | bash
+    tags:
+      - install
 
   - name: update bookshelf
     lineinfile: dest=/etc/chef-server/chef-server.rb insertbefore=BOF regexp='bookshelf\["vip"\]' line='bookshelf["vip"] = "{{ hostvars[groups['zwift.chef-server'][0]]['ansible_' ~ chef_server_interface]['ipv4']['address'] }}"'
@@ -16,6 +18,7 @@
       - reconfigure chef-server
     tags:
       - fixdns
+      - install
     
   - name: install packages
     apt: pkg={{ item }}
@@ -27,15 +30,21 @@
       - build-essential
       - zlib1g-dev
       - make
+    tags:
+      - install
 
   - name: install berkshelf
     gem: name=berkshelf state=latest
+    tags:
+      - install
 
   - name: get rcbops cookbooks from git
     git: repo={{ cookbook.repo }} dest={{ cookbook.dir }} version={{ cookbook.version }}
     notify:
       - upload cookbooks
       - upload cookbook roles
+    tags:
+      - cookbooks
 
   - name: get swift-lite dependencies from git
     git: repo={{ opscode}}/{{ item }} dest={{ cookbook.dir }}/cookbooks/{{ item }}
@@ -47,26 +56,29 @@
       - cron
     notify:
       - upload cookbooks
+    tags:
+      - cookbooks
 
   - name: get swift-lite cookbook from git
     git: repo={{ swift_lite.repo }} dest={{ cookbook.dir }}/cookbooks/swift-lite version={{ swift_lite.version }}
     notify:
       - upload cookbooks
       - upload swift-lite roles
+    tags:
+      - cookbooks
 
-#  - name: get swift-private-cloud cookbook from git
-#    git: repo={{ swift_private_cloud.repo }} dest={{ cookbook.dir }}/swift-private-cloud version={{ swift_private_cloud.version }}
-#    notify:
-#      - upload to berkshelf
-#      - upload swift-private-cloud roles
+  - name: get zwift cookbook from git
+    git: repo={{ zwift_cookbook.repo }} dest={{ cookbook.dir }}/cookbooks/zwift version={{ zwift_cookbook.version }}
+    notify:
+      - upload cookbooks
+      - upload zwift roles
+    tags:
+      - cookbooks
 
   handlers:
   
   - name: upload cookbooks
     shell: chdir={{ cookbook.dir }} executable=/bin/bash /opt/chef-server/bin/knife cookbook upload -a -o cookbooks
-
-#  - name: upload to berkshelf
-#    shell: chdir={{ cookbook.dir }}/swift-private-cloud berks install; berks upload
 
   - name: upload cookbook roles
     shell: chdir={{ cookbook.dir }} executable=/bin/bash /opt/chef-server/bin/knife role from file roles/*.rb
@@ -74,8 +86,8 @@
   - name: upload swift-lite roles
     shell: chdir={{ cookbook.dir }}/cookbooks/swift-lite/contrib executable=/bin/bash /opt/chef-server/bin/knife role from file roles/*.rb
 
-#  - name: upload swift-private-cloud roles
-#    shell: chdir={{ cookbook.dir }}/swift-private-cloud executable=/bin/bash /opt/chef-server/bin/knife role from file roles/*.rb
+  - name: upload zwift roles
+    shell: chdir={{ cookbook.dir }}/cookbooks/zwift executable=/bin/bash /opt/chef-server/bin/knife role from file roles/*.rb
 
   - name: reconfigure chef-server
     command: chef-server-ctl reconfigure

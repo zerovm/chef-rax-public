@@ -1,4 +1,5 @@
 ---
 - name: run chef clients
   shell: chef-client
-
+  tags:
+    - run_chef_clients

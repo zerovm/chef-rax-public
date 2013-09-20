@@ -5,6 +5,7 @@
   ignore_errors: True
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
     
 - name: check for object rebalance errors
@@ -12,6 +13,7 @@
   when: rebalance_object.rc != 0 and rebalance_object.stdout.find('No partitions could be reassigned') == -1 
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
 
 - name: rebalance container ring
@@ -20,6 +22,7 @@
   register: rebalance_container
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
 
 - name: check for container rebalance errors
@@ -27,6 +30,7 @@
   when: rebalance_container.rc != 0 and rebalance_container.stdout.find('No partitions could be reassigned') == -1 
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
 
 - name: rebalance account ring
@@ -35,6 +39,7 @@
   register: rebalance_account
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
 
 - name: check for account rebalance errors
@@ -42,5 +47,6 @@
   when: rebalance_account.rc != 0 and rebalance_account.stdout.find('No partitions could be reassigned') == -1 
   delegate_to: "{{ groups['zwift.proxy'][0] }}"
   tags:
+    - rings
     - rebalance
 

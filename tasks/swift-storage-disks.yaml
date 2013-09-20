@@ -32,9 +32,3 @@
   tags:
     - storage
 
-#- name: Set permissions for storage devices
-#  file: path=/srv/node/{{ item.name }} owner=swift group=swift state=directory
-#  when: disk_strategy == 'rackspace'
-#  with_items: parted_existing
-#  tags:
-#    - storage

@@ -2,23 +2,31 @@
 - name: create swift-lite environment
   template: src=../templates/swift-lite.json dest=/tmp/swift-lite.json
   when: "'zwift.chef-server' in group_names"
+  tags:
+    - chef_env
 
 - name: set up chef environment
   shell: /opt/chef-server/bin/knife environment from file /tmp/swift-lite.json
   when: "'zwift.chef-server' in group_names"
+  tags:
+    - chef_env
 
 - name: copy environment for nodes
   template: src=../templates/chef-swift-node.json dest=/tmp/chef-swift-{{ inventory_hostname }}.json
   when: "'zwift.proxy' in group_names or 'zwift.storage' in group_names"
   delegate_to: "{{ groups['zwift.chef-server'][0] }}"
+  tags:
+    - chef_env
 
 - name: update environments
   shell: /opt/chef-server/bin/knife node from file /tmp/chef-swift-{{ inventory_hostname }}.json
   when: "not 'zwift.chef-server' in group_names"
   delegate_to: "{{ groups['zwift.chef-server'][0] }}"
+  tags:
+    - chef_env
 
 - name: run chef clients
   shell: chef-client
   when: "not 'zwift.chef-server' in group_names"
   tags:
-    - run_chef_client
+    - chef_env

@@ -6,6 +6,11 @@
     - object
     - container
     - account
+  notify:
+    - update chef clients
+  tags:
+    - upload_rings
+    - rings
 
 - name: upload rings
   copy: src=/tmp/{{ item }}.ring.gz dest=/etc/swift/{{ item }}.ring.gz owner=swift group=swift backup=yes
@@ -13,4 +18,9 @@
     - object
     - container
     - account
+  notify:
+    - update chef clients
+  tags:
+    - upload_rings
+    - rings
  
