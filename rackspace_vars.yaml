@@ -1,31 +1,49 @@
 ---
+# --- credentials file in PyRax format, required
 credentials: /home/zvm/.rax-corp
+# --- Cloud Servers region id, required
 region: IAD
+# --- ssh key to use for newly created servers, required
 key_name: zvm
+
+# everything below here is a default
+# don't change unless you know what you're doing
 image: 23b564c9-c3e6-49f9-bc68-86c7a9ab5018 # Ubuntu 12.04 LTS
+# rcbops cookbooks
 cookbook:
   repo: https://github.com/rcbops/chef-cookbooks
   version: master
   dir: /root/chef-cookbooks
+# swift-lite cookbook
 swift_lite:
   repo: https://github.com/rcbops-cookbooks/swift-lite
   version: master
+# ZeroVM Zwift cookbook
 zwift_cookbook:
   repo: https://github.com/zerovm/zwift-cookbook
   version: master
+# default path for dependency cookbooks
 opscode: https://github.com/opscode-cookbooks
+
+# interfaces are needed for iptables setup
 proxy_internal_interface: eth1
 proxy_external_interface: eth0
 storage_internal_interface: eth1
 storage_external_interface: eth0
+
+# variables for partitioning strategy
 disk_strategy: rackspace
 min_storage_partition: 20000 # in MB
 device_weight: 1
+
+# chef client variables
 chef_server_interface: eth1
 chef_client_interface: eth1
 chef_client:
   version: "11.2.0-1"
   env: "_default"
+
+# roles assignment
 chef_roles:
   storage:
     - '"role[zwift-storage-server]"'
