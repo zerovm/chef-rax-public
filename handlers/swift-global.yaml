@@ -8,3 +8,6 @@
 - name: update chef clients
   shell: chef-client
 
+- name: restart apache
+  action: service name=apache2 state=restarted
+

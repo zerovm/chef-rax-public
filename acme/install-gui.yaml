@@ -1,0 +1,12 @@
+- hosts: zwift.proxy
+  user: root
+  gather_facts: True
+  vars_files:
+    - ../rackspace_vars.yaml
+
+  tasks:
+    - include: ../tasks/swift-proxy-apache-rax.yaml
+
+  handlers:
+    - include: ../handlers/swift-global.yaml
+

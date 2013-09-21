@@ -1,0 +1,29 @@
+---
+- name: ensure apache packages are installed
+  action: apt pkg=$item
+  with_items:
+      - apache2
+  tags:
+    - http
+
+- name: create http config
+  action: template src=../templates/default-rax dest=/etc/apache2/sites-available/default owner=root group=root mode=0644
+  notify:
+    - restart apache
+  tags:
+    - http
+
+- name: enable proxy mod
+  action: command a2enmod proxy
+  notify:
+    - restart apache
+  tags:
+    - http
+
+- name: enable proxy_http mod
+  action: command a2enmod proxy_http
+  notify:
+    - restart apache
+  tags:
+    - http
+
