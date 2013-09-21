@@ -24,3 +24,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 ansible-playbook -i rax_inventory.py --private-key="$1" acme/finalize-servers.yaml
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+ansible-playbook -i rax_inventory.py --private-key="$1" acme/install-gui.yaml
