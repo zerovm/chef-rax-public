@@ -57,6 +57,7 @@
       key_name: '{{ key_name }}'
       disk_config: 'manual'
       wait: yes
+      wait_timeout: 600
       state: present
     with_items: swift_servers
     when: item.role == 'zwift.storage' and create_storage.changed
@@ -74,6 +75,7 @@
       key_name: '{{ key_name }}'
       disk_config: 'manual'
       wait: yes
+      wait_timeout: 600
       state: present
     with_items: swift_servers
     when: item.role == 'zwift.proxy' and create_proxy.changed
