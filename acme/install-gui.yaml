@@ -3,9 +3,11 @@
   gather_facts: True
   vars_files:
     - ../rackspace_vars.yaml
+    - ../zwift_vars.yaml
 
   tasks:
     - include: ../tasks/swift-proxy-apache-rax.yaml
+    - include: ../tasks/zwift-ui.yaml
 
   handlers:
     - include: ../handlers/swift-global.yaml

@@ -1,0 +1,4 @@
+---
+- name: get zwift web gui from git
+  git: repo={{ zwift_ui.repo }} dest={{ zwift_ui.dir }} version={{ zwift_ui.version }}
+

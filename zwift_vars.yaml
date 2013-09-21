@@ -1,0 +1,5 @@
+---
+zwift_ui:
+  repo: https://github.com/zerovm/zwift-ui
+  dir: /var/www/ui
+  version: master
