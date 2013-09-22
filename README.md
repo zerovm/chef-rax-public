@@ -10,6 +10,10 @@ The rax module will need to be patched in the interim to support disk_config.
 
 You'll need a version of ansible with the rax module and the pyrax libraryinstalled.
 
+Constantine:
+As I get no love from Ansible team for some reason, for now it's better to use our Ansible fork at https://github.com/zerovm/ansible.git
+It has both parted and parted_facts modules and all the rax fixes
+
 ## How to setup
 
 1. Create/choose ssh key for the new servers, let's denote its location by `PRV_KEY` and its name by `KEY_NAME`
