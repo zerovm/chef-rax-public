@@ -10,9 +10,9 @@ The rax module will need to be patched in the interim to support disk_config.
 
 You'll need a version of ansible with the rax module and the pyrax libraryinstalled.
 
-Constantine:
-As I get no love from Ansible team for some reason, for now it's better to use our Ansible fork at https://github.com/zerovm/ansible.git
-It has both parted and parted_facts modules and all the rax fixes
+Constantine:  
+As I get no love from Ansible team for some reason, for now it's better to use our Ansible fork at https://github.com/zerovm/ansible.git  
+It has both parted and parted_facts modules and all the rax fixes  
 
 ## How to setup
 
@@ -39,4 +39,7 @@ Example:
     <pre>export RAX_REGION=IAD
     export RAX_CREDS_FILE=/home/zerovm/.rax-cred</pre>
 
-6. Now run `./rax-deploy.sh` with the `PRV_KEY` filename as argument.
+6. Copy `rackspace-server-list.yaml.example` to `rackspace-server-list.yaml` and edit it to your needs. 
+The example file creates a big 10-node cluster, beware.
+
+7. Now run `./rax-deploy.sh` with the `PRV_KEY` filename as argument.
